@@ -18,3 +18,6 @@ clean:
 
 check:
 	avrdude -p ${MCU} -c usbtiny
+
+extract:
+	avrdude -p ${MCU} -c usbtiny -U flash:r:EVMS_Monitor3_backup.hex:i

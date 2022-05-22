@@ -15,6 +15,8 @@
 
 #define MAX_BMS_MODULES	16
 
+#define __DELAY_BACKWARD_COMPATIBLE__
+
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
@@ -110,8 +112,8 @@ void HandleTouchUp();
 void DoSetupButtons(char isKeyRepeat);
 void TransmitSettings();
 void TransmitGaugeState();
-inline void Beep(short ticks);
-inline void UpdateBuzzer();
+static inline void Beep(short ticks);
+static inline void UpdateBuzzer();
 void AddDecimalPoint(char* buffer);
 void AddDecimalPoint2(char* buffer);
 void SetupPorts();
@@ -129,7 +131,7 @@ void RenderBMSSummary();
 void RenderBMSDetails();
 void RenderWarningOverlay();
 void RenderOptionsButtons();
-inline void RenderBorderBox(int lx, int ly, int rx, int ry, U16 Fcolor, U16 Bcolor);
+static inline void RenderBorderBox(int lx, int ly, int rx, int ry, U16 Fcolor, U16 Bcolor);
 void RenderButton(Button* button, bool needsRedraw);
 void RenderSettings();
 
@@ -203,13 +205,13 @@ ChargerData charger[3] = {{ 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0,
 char haveReceivedChargerData = false;
 char numChargers = 1; // Gets set to 3 if we receive data from third charger
 
-inline bool ButtonTouched(Button* button)
+static inline bool ButtonTouched(Button* button)
 {
 	return (touchX >= button->x-button->width/2 && touchX <= button->x+button->width/2
 		&& touchY >= button->y && touchY <= button->y + 32);
 }
 
-inline void DisplayOn(bool on, bool shouldSaveToEEPROM)
+static inline void DisplayOn(bool on, bool shouldSaveToEEPROM)
 {
 	if (on)
 	{
@@ -689,7 +691,7 @@ int main()
 	return 0; // Compiler wants to see it
 }
 
-inline void CheckTouchedButton(Button* button)
+static inline void CheckTouchedButton(Button* button)
 {
 	if (ButtonTouched(button)) touchedButton = button;
 }
@@ -1401,7 +1403,7 @@ void RenderMainView()
 		if (isBMS16)
 			strcpy(buffer, "BMS Status: ");
 		else
-			strcpy(buffer, "EVMS: ");
+			strcpy(buffer, "FZR250: ");
 		strcat(buffer, statusText);
 		
 		DrawTitlebar(buffer);
@@ -2221,7 +2223,7 @@ void RenderOptionsButtons()
 	RenderButton(&exitOptionsButton, needsRedraw);
 }
 
-inline void RenderBorderBox(int lx, int ly, int rx, int ry, U16 Fcolor, U16 Bcolor)
+static inline void RenderBorderBox(int lx, int ly, int rx, int ry, U16 Fcolor, U16 Bcolor)
 {
 	TFT_Box(lx, ly, rx, ry, Fcolor);
 	TFT_Box(lx+2, ly+2, rx-2, ry-2, Bcolor);

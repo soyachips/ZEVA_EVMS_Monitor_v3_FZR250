@@ -123,13 +123,13 @@ char state;
 
 enum { CORE_IDLE_STATE, CORE_SETUP_STATE, CORE_SETUP_EDIT_FUEL_GAUGE, CORE_SETUP_EDIT_TEMP_GAUGE };
 #ifdef MONITOR
-	prog_char cs1[] PROGMEM = "Idle";
-	prog_char cs2[] PROGMEM = "Precharging";
-	prog_char cs3[] PROGMEM = "Running";
-	prog_char cs4[] PROGMEM = "Charging";
-	prog_char cs5[] PROGMEM = "Stopped";
-	prog_char cs6[] PROGMEM = "Setup";
-	PROGMEM const char* coreStatuses[] = { cs1, cs2, cs3, cs4, cs5, cs6 };
+	const char cs1[] PROGMEM = "Idle";
+	const char cs2[] PROGMEM = "Precharging";
+	const char cs3[] PROGMEM = "Running";
+	const char cs4[] PROGMEM = "Charging";
+	const char cs5[] PROGMEM = "Stopped";
+	const char cs6[] PROGMEM = "Setup";
+	PROGMEM const char* const coreStatuses[] = { cs1, cs2, cs3, cs4, cs5, cs6 };
 #endif
 
 short ticksInCurrentState = 0;
@@ -155,25 +155,25 @@ enum { NO_ERROR,
 	NUM_ERRORS };
 
 #ifdef MONITOR
-	prog_char e0[] PROGMEM = "No error";
-	prog_char e1[] PROGMEM = "Corrupt settings";
-	prog_char e2[] PROGMEM = "Overcurrent warning";
-	prog_char e3[] PROGMEM = "Overcurrent shutdown";
-	prog_char e4[] PROGMEM = "BMS - Low cell";
-	prog_char e5[] PROGMEM = "Shutdown by BMS";
-	prog_char e6[] PROGMEM = "BMS - High cell";
-	prog_char e7[] PROGMEM = "Charge ended by BMS";
-	prog_char e8[] PROGMEM = "BMS - Overtemp";
-	prog_char e9[] PROGMEM = "BMS - Undertemp";
-	prog_char e10[] PROGMEM = "Low battery charge";
-	prog_char e11[] PROGMEM = "Over-temperature";
-	prog_char e12[] PROGMEM = "Isolation fault";
-	prog_char e13[] PROGMEM = "Low 12V battery";
-	prog_char e14[] PROGMEM = "Precharge failed";
-	prog_char e15[] PROGMEM = "Contactor fault";
-	prog_char e16[] PROGMEM = "BMS - Comms error";
-	prog_char e17[]	PROGMEM = "No comms to EVMS";
-	PROGMEM const char* errorStrings[] = { e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16,e17 };
+	const char e0[] PROGMEM = "No error";
+	const char e1[] PROGMEM = "Corrupt settings";
+	const char e2[] PROGMEM = "Overcurrent warning";
+	const char e3[] PROGMEM = "Overcurrent shutdown";
+	const char e4[] PROGMEM = "BMS - Low cell";
+	const char e5[] PROGMEM = "Shutdown by BMS";
+	const char e6[] PROGMEM = "BMS - High cell";
+	const char e7[] PROGMEM = "Charge ended by BMS";
+	const char e8[] PROGMEM = "BMS - Overtemp";
+	const char e9[] PROGMEM = "BMS - Undertemp";
+	const char e10[] PROGMEM = "Low battery charge";
+	const char e11[] PROGMEM = "Over-temperature";
+	const char e12[] PROGMEM = "Isolation fault";
+	const char e13[] PROGMEM = "Low 12V battery";
+	const char e14[] PROGMEM = "Precharge failed";
+	const char e15[] PROGMEM = "Contactor fault";
+	const char e16[] PROGMEM = "BMS - Comms error";
+	const char e17[]	PROGMEM = "No comms to EVMS";
+	PROGMEM const char* const errorStrings[] = { e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16,e17 };
 #endif
 
 enum { // MPI functions
@@ -184,11 +184,11 @@ enum { // MPI functions
 	MPI_NUM_FUNCTIONS };
 
 #ifdef MONITOR
-	prog_char mpi1[] PROGMEM = "Wake up";
-	prog_char mpi2[] PROGMEM = "Alt charge";
-	prog_char mpi3[] PROGMEM = "Hdlight in";
-	prog_char mpi4[] PROGMEM = "Ctr aux sw";
-	PROGMEM const char* mpiStrings[] = { mpi1, mpi2, mpi3, mpi4 };
+	const char mpi1[] PROGMEM = "Wake up";
+	const char mpi2[] PROGMEM = "Alt charge";
+	const char mpi3[] PROGMEM = "Hdlight in";
+	const char mpi4[] PROGMEM = "Ctr aux sw";
+	PROGMEM const char* const mpiStrings[] = { mpi1, mpi2, mpi3, mpi4 };
 #endif
 
 enum { // MPO functions
@@ -202,14 +202,14 @@ enum { // MPO functions
 	MPO_NUM_FUNCTIONS };
 
 #ifdef MONITOR
-	prog_char mpo1[] PROGMEM = "Ground";
-	prog_char mpo2[] PROGMEM = "Temp gauge";
-	prog_char mpo3[] PROGMEM = "Low SoC";
-	prog_char mpo4[] PROGMEM = "Overtemp";
-	prog_char mpo5[] PROGMEM = "Undertemp";
-	prog_char mpo6[] PROGMEM = "Error";
-	prog_char mpo7[] PROGMEM = "Status";
-	PROGMEM const char* mpoStrings[] = { mpo1, mpo2, mpo3, mpo4, mpo5, mpo6, mpo7 };
+	const char mpo1[] PROGMEM = "Ground";
+	const char mpo2[] PROGMEM = "Temp gauge";
+	const char mpo3[] PROGMEM = "Low SoC";
+	const char mpo4[] PROGMEM = "Overtemp";
+	const char mpo5[] PROGMEM = "Undertemp";
+	const char mpo6[] PROGMEM = "Error";
+	const char mpo7[] PROGMEM = "Status";
+	PROGMEM const char* const mpoStrings[] = { mpo1, mpo2, mpo3, mpo4, mpo5, mpo6, mpo7 };
 #endif
 
 enum { SOC_PERCENT, SOC_AMPHOURS };
@@ -414,43 +414,43 @@ unsigned char bms16maximums[NUM_SETTINGS] = {
 #define SHUNT_SIZE  MIN_ISOLATION
 
 #ifdef MONITOR
-	prog_char s0[] PROGMEM  = " Pack Capacity ";
-	prog_char s1[] PROGMEM  = "  SoC Warning  ";
-	prog_char s2[] PROGMEM  = " Full Voltage ";
-	prog_char s3[] PROGMEM  = " Warn Current ";
-	prog_char s4[] PROGMEM  = "   Trip Current   ";
-	prog_char s5[] PROGMEM  = "EVMS Temp Warning";
-	prog_char s6[] PROGMEM  = " Min Aux Voltage ";
-	prog_char s7[] PROGMEM  = " Min Isolation ";
-	prog_char s8[] PROGMEM  = "   Tacho PPR   ";
-	prog_char s9[] PROGMEM  = " Fuel Gauge Full ";
-	prog_char s10[] PROGMEM = "Fuel Gauge Empty";
-	prog_char s11[] PROGMEM = " Temp Gauge Hot ";
-	prog_char s12[] PROGMEM = " Temp Gauge Cold ";
-	prog_char s14[] PROGMEM = " BMS Min Voltage ";
-	prog_char s15[] PROGMEM = " BMS Max Voltage ";
-	prog_char s18b[] PROGMEM= " Balance Voltage ";
-	prog_char s16[] PROGMEM = "  BMS Hysteresis  ";
-	prog_char s17[] PROGMEM = "  BMS Min Temp  ";
-	prog_char s18[] PROGMEM = "  BMS Max Temp  ";
-//	prog_char s19[] PROGMEM = "Low Temp Chg Rest.";
-	prog_char s21[] PROGMEM = "Max Charge Voltage";
-	prog_char s22[] PROGMEM = "Max Charge Current";
-	prog_char s23[] PROGMEM = "Alt Charge Voltage";
-	prog_char s24[] PROGMEM = "Alt Charge Current";
-	prog_char s25[] PROGMEM = "    Sleep Delay    ";
-	prog_char s26[] PROGMEM = "  MPI Function  ";
-	prog_char s27[] PROGMEM = "  MPO1 Function  ";
-	prog_char s28[] PROGMEM = "  MPO2 Function  ";
-	prog_char s29[] PROGMEM = " Parallel Strings ";
-	prog_char s13[] PROGMEM = "Enable Precharge";
-	prog_char s20[] PROGMEM = "  Stationary Mode  ";
-	prog_char s30[] PROGMEM = "Rev. Current Disp";
-	prog_char s31[] PROGMEM = "Night Brightness";
-	prog_char s32[] PROGMEM =  "    Buzzer On    ";
-	prog_char s33[] PROGMEM =  " Use Fahrenheit ";
-	prog_char s34[] PROGMEM =  "   SoC Display   ";
-	PROGMEM const char* generalSettingsLabels[] = { s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,
+	const char s0[] PROGMEM  = " Pack Capacity ";
+	const char s1[] PROGMEM  = "  SoC Warning  ";
+	const char s2[] PROGMEM  = " Full Voltage ";
+	const char s3[] PROGMEM  = " Warn Current ";
+	const char s4[] PROGMEM  = "   Trip Current   ";
+	const char s5[] PROGMEM  = "EVMS Temp Warning";
+	const char s6[] PROGMEM  = " Min Aux Voltage ";
+	const char s7[] PROGMEM  = " Min Isolation ";
+	const char s8[] PROGMEM  = "   Tacho PPR   ";
+	const char s9[] PROGMEM  = " Fuel Gauge Full ";
+	const char s10[] PROGMEM = "Fuel Gauge Empty";
+	const char s11[] PROGMEM = " Temp Gauge Hot ";
+	const char s12[] PROGMEM = " Temp Gauge Cold ";
+	const char s14[] PROGMEM = " BMS Min Voltage ";
+	const char s15[] PROGMEM = " BMS Max Voltage ";
+	const char s18b[] PROGMEM= " Balance Voltage ";
+	const char s16[] PROGMEM = "  BMS Hysteresis  ";
+	const char s17[] PROGMEM = "  BMS Min Temp  ";
+	const char s18[] PROGMEM = "  BMS Max Temp  ";
+//	const char s19[] PROGMEM = "Low Temp Chg Rest.";
+	const char s21[] PROGMEM = "Max Charge Voltage";
+	const char s22[] PROGMEM = "Max Charge Current";
+	const char s23[] PROGMEM = "Alt Charge Voltage";
+	const char s24[] PROGMEM = "Alt Charge Current";
+	const char s25[] PROGMEM = "    Sleep Delay    ";
+	const char s26[] PROGMEM = "  MPI Function  ";
+	const char s27[] PROGMEM = "  MPO1 Function  ";
+	const char s28[] PROGMEM = "  MPO2 Function  ";
+	const char s29[] PROGMEM = " Parallel Strings ";
+	const char s13[] PROGMEM = "Enable Precharge";
+	const char s20[] PROGMEM = "  Stationary Mode  ";
+	const char s30[] PROGMEM = "Rev. Current Disp";
+	const char s31[] PROGMEM = "Night Brightness";
+	const char s32[] PROGMEM =  "    Buzzer On    ";
+	const char s33[] PROGMEM =  " Use Fahrenheit ";
+	const char s34[] PROGMEM =  "   SoC Display   ";
+	PROGMEM const char* const generalSettingsLabels[] = { s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,
 		s11,s12,s14,s15,s18b,s16,s17,s18,s21,s22,s23,s24,s25,s26,s27,s28,s29,s13,s20,s30,s31,s32,s33,s34 };
 	char* allSettingsUnits[] = { "Ah", "%", "V", "A", "A", "C", "V", "%", "", "%", "%", "%", "%", // temp gauge cold
 		"V", "V", "V", "V", "C", "C", "V", "A", "V", "A", "min", "", "", "", "", "", "", "", "%", "", "", "" };
@@ -460,20 +460,20 @@ unsigned char bmsCellCounts[16] = { 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 //unsigned char bmsCellCounts[24] = { 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };
 
 // Utility functions
-inline short Abs(short num)
+static inline short Abs(short num)
 {
 	if (num < 0) return -num;
 	return num;
 }
 
-inline short Cap(short val, short min, short max)
+static inline short Cap(short val, short min, short max)
 {
 	if (val < min) return min;
 	if (val > max) return max;
 	return val;
 }
 
-inline long CapLong(long val, long min, long max)
+static inline long CapLong(long val, long min, long max)
 {
 	if (val < min) return min;
 	if (val > max) return max;

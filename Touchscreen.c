@@ -13,7 +13,7 @@
 #include "Fonts.h"
 
 // Private utility function
-inline unsigned char ReverseByte(unsigned char x);
+static inline unsigned char ReverseByte(unsigned char x);
 
 static int type;
 static char swapX;
@@ -136,7 +136,7 @@ void TFT_Init(int displayType, char swapXtouch)
 				TFT_WriteData(*addr++);
 			}
 		}
-		
+
 		TFT_WriteCommand(ILI9341_SLPOUT);
 		_delay_ms(120);
 		TFT_WriteCommand(ILI9341_DISPON);
@@ -144,64 +144,64 @@ void TFT_Init(int displayType, char swapXtouch)
 	else if (type == ILI9325)
 	{
 		TFT_WriteCommandData(0xE5, 0x78F0); // set SRAM internal timing
-		TFT_WriteCommandData(0x01, 0x0100); // set Driver Output Control  
-		TFT_WriteCommandData(0x02, 0x0200); // set 1 line inversion  
-		TFT_WriteCommandData(0x03, 0x1030); // set GRAM write direction and BGR=1.  
-		TFT_WriteCommandData(0x04, 0x0000); // Resize register  
-		TFT_WriteCommandData(0x08, 0x0207); // set the back porch and front porch  
-		TFT_WriteCommandData(0x09, 0x0000); // set non-display area refresh cycle ISC[3:0]  
-		TFT_WriteCommandData(0x0A, 0x0000); // FMARK function  
-		TFT_WriteCommandData(0x0C, 0x0000); // RGB interface setting  
-		TFT_WriteCommandData(0x0D, 0x0000); // Frame marker Position  
-		TFT_WriteCommandData(0x0F, 0x0000); // RGB interface polarity  
-		//*************Power On sequence ****************  
-		TFT_WriteCommandData(0x10, 0x0000); // SAP, BT[3:0], AP, DSTB, SLP, STB  
-		TFT_WriteCommandData(0x11, 0x0007); // DC1[2:0], DC0[2:0], VC[2:0]  
-		TFT_WriteCommandData(0x12, 0x0000); // VREG1OUT voltage  
-		TFT_WriteCommandData(0x13, 0x0000); // VDV[4:0] for VCOM amplitude  
-		TFT_WriteCommandData(0x07, 0x0001);  
-		_delay_ms(200); // Dis-charge capacitor power voltage  
-		TFT_WriteCommandData(0x10, 0x1690); // SAP, BT[3:0], AP, DSTB, SLP, STB  
-		TFT_WriteCommandData(0x11, 0x0227); // Set DC1[2:0], DC0[2:0], VC[2:0]  
-		_delay_ms(50); // Delay 50ms  
-		TFT_WriteCommandData(0x12, 0x000D); // 0012  
-		_delay_ms(50); // Delay 50ms  
-		TFT_WriteCommandData(0x13, 0x1200); // VDV[4:0] for VCOM amplitude  
-		TFT_WriteCommandData(0x29, 0x000A); // 04  VCM[5:0] for VCOMH  
-		TFT_WriteCommandData(0x2B, 0x000D); // Set Frame Rate  
-		_delay_ms(50); // Delay 50ms  
-		TFT_WriteCommandData(0x20, 0x0000); // GRAM horizontal Address  
-		TFT_WriteCommandData(0x21, 0x0000); // GRAM Vertical Address  
-		// ----------- Adjust the Gamma Curve ----------//  
-		TFT_WriteCommandData(0x30, 0x0000);  
-		TFT_WriteCommandData(0x31, 0x0404);  
-		TFT_WriteCommandData(0x32, 0x0003);  
-		TFT_WriteCommandData(0x35, 0x0405);  
-		TFT_WriteCommandData(0x36, 0x0808);  
-		TFT_WriteCommandData(0x37, 0x0407);  
-		TFT_WriteCommandData(0x38, 0x0303);  
-		TFT_WriteCommandData(0x39, 0x0707);  
-		TFT_WriteCommandData(0x3C, 0x0504);  
-		TFT_WriteCommandData(0x3D, 0x0808);  
-		//------------------ Set GRAM area ---------------//  
-		TFT_WriteCommandData(0x50, 0x0000); // Horizontal GRAM Start Address  
-		TFT_WriteCommandData(0x51, 0x00EF); // Horizontal GRAM End Address  
-		TFT_WriteCommandData(0x52, 0x0000); // Vertical GRAM Start Address  
-		TFT_WriteCommandData(0x53, 0x013F); // Vertical GRAM Start Address  
-		TFT_WriteCommandData(0x60, 0xA700); // Gate Scan Line  
-		TFT_WriteCommandData(0x61, 0x0001); // NDL,VLE, REV   
-		TFT_WriteCommandData(0x6A, 0x0000); // set scrolling line  
-		//-------------- Partial Display Control ---------//  
-		TFT_WriteCommandData(0x80, 0x0000);  
-		TFT_WriteCommandData(0x81, 0x0000);  
-		TFT_WriteCommandData(0x82, 0x0000);  
-		TFT_WriteCommandData(0x83, 0x0000);  
-		TFT_WriteCommandData(0x84, 0x0000);  
-		TFT_WriteCommandData(0x85, 0x0000);  
-		//-------------- Panel Control -------------------//  
-		TFT_WriteCommandData(0x90, 0x0010);  
-		TFT_WriteCommandData(0x92, 0x0000);  
-		TFT_WriteCommandData(0x07, 0x0133); // 262K color and display ON        
+		TFT_WriteCommandData(0x01, 0x0100); // set Driver Output Control
+		TFT_WriteCommandData(0x02, 0x0200); // set 1 line inversion
+		TFT_WriteCommandData(0x03, 0x1030); // set GRAM write direction and BGR=1.
+		TFT_WriteCommandData(0x04, 0x0000); // Resize register
+		TFT_WriteCommandData(0x08, 0x0207); // set the back porch and front porch
+		TFT_WriteCommandData(0x09, 0x0000); // set non-display area refresh cycle ISC[3:0]
+		TFT_WriteCommandData(0x0A, 0x0000); // FMARK function
+		TFT_WriteCommandData(0x0C, 0x0000); // RGB interface setting
+		TFT_WriteCommandData(0x0D, 0x0000); // Frame marker Position
+		TFT_WriteCommandData(0x0F, 0x0000); // RGB interface polarity
+		//*************Power On sequence ****************
+		TFT_WriteCommandData(0x10, 0x0000); // SAP, BT[3:0], AP, DSTB, SLP, STB
+		TFT_WriteCommandData(0x11, 0x0007); // DC1[2:0], DC0[2:0], VC[2:0]
+		TFT_WriteCommandData(0x12, 0x0000); // VREG1OUT voltage
+		TFT_WriteCommandData(0x13, 0x0000); // VDV[4:0] for VCOM amplitude
+		TFT_WriteCommandData(0x07, 0x0001);
+		_delay_ms(200); // Dis-charge capacitor power voltage
+		TFT_WriteCommandData(0x10, 0x1690); // SAP, BT[3:0], AP, DSTB, SLP, STB
+		TFT_WriteCommandData(0x11, 0x0227); // Set DC1[2:0], DC0[2:0], VC[2:0]
+		_delay_ms(50); // Delay 50ms
+		TFT_WriteCommandData(0x12, 0x000D); // 0012
+		_delay_ms(50); // Delay 50ms
+		TFT_WriteCommandData(0x13, 0x1200); // VDV[4:0] for VCOM amplitude
+		TFT_WriteCommandData(0x29, 0x000A); // 04  VCM[5:0] for VCOMH
+		TFT_WriteCommandData(0x2B, 0x000D); // Set Frame Rate
+		_delay_ms(50); // Delay 50ms
+		TFT_WriteCommandData(0x20, 0x0000); // GRAM horizontal Address
+		TFT_WriteCommandData(0x21, 0x0000); // GRAM Vertical Address
+		// ----------- Adjust the Gamma Curve ----------//
+		TFT_WriteCommandData(0x30, 0x0000);
+		TFT_WriteCommandData(0x31, 0x0404);
+		TFT_WriteCommandData(0x32, 0x0003);
+		TFT_WriteCommandData(0x35, 0x0405);
+		TFT_WriteCommandData(0x36, 0x0808);
+		TFT_WriteCommandData(0x37, 0x0407);
+		TFT_WriteCommandData(0x38, 0x0303);
+		TFT_WriteCommandData(0x39, 0x0707);
+		TFT_WriteCommandData(0x3C, 0x0504);
+		TFT_WriteCommandData(0x3D, 0x0808);
+		//------------------ Set GRAM area ---------------//
+		TFT_WriteCommandData(0x50, 0x0000); // Horizontal GRAM Start Address
+		TFT_WriteCommandData(0x51, 0x00EF); // Horizontal GRAM End Address
+		TFT_WriteCommandData(0x52, 0x0000); // Vertical GRAM Start Address
+		TFT_WriteCommandData(0x53, 0x013F); // Vertical GRAM Start Address
+		TFT_WriteCommandData(0x60, 0xA700); // Gate Scan Line
+		TFT_WriteCommandData(0x61, 0x0001); // NDL,VLE, REV
+		TFT_WriteCommandData(0x6A, 0x0000); // set scrolling line
+		//-------------- Partial Display Control ---------//
+		TFT_WriteCommandData(0x80, 0x0000);
+		TFT_WriteCommandData(0x81, 0x0000);
+		TFT_WriteCommandData(0x82, 0x0000);
+		TFT_WriteCommandData(0x83, 0x0000);
+		TFT_WriteCommandData(0x84, 0x0000);
+		TFT_WriteCommandData(0x85, 0x0000);
+		//-------------- Panel Control -------------------//
+		TFT_WriteCommandData(0x90, 0x0010);
+		TFT_WriteCommandData(0x92, 0x0000);
+		TFT_WriteCommandData(0x07, 0x0133); // 262K color and display ON
 	}
 	else // SSD 1289
 	{
@@ -246,7 +246,7 @@ void TFT_Init(int displayType, char swapXtouch)
 		TFT_WriteCommandData(0x25,0x8000);
 		TFT_WriteCommandData(0x4f,0x0000);
 		TFT_WriteCommandData(0x4e,0x0000);
-		TFT_WriteCommand(0x22);   
+		TFT_WriteCommand(0x22);
 	}
 
     CS_PORT |= CS;	// TFT_CS =1;
@@ -293,7 +293,7 @@ void TFT_SetBounds(unsigned int PX1,unsigned int PY1,unsigned int PX2,unsigned i
 	// We're using landscape so have to swap some things around
 	unsigned int temp;
 	temp = PX1; PX1 = PY1; PY1 = temp;
-	temp = PX2; PX2 = PY2; PY2 = temp;	
+	temp = PX2; PX2 = PY2; PY2 = temp;
 
 #ifdef ROTATE180 // Then it's like the old panel.. swap Y (which is actually X because we're landscape)
 	PY1 = 320-PY1;
@@ -334,7 +334,7 @@ void TFT_SetBounds(unsigned int PX1,unsigned int PY1,unsigned int PX2,unsigned i
 		TFT_WriteCommandData(0x52,PY1);
 		TFT_WriteCommandData(0x51,PX2);
 		TFT_WriteCommandData(0x53,PY2);
-		TFT_WriteCommand(0x22); 
+		TFT_WriteCommand(0x22);
 	}
 	else // SSD1289
 	{
@@ -343,7 +343,7 @@ void TFT_SetBounds(unsigned int PX1,unsigned int PY1,unsigned int PX2,unsigned i
 		TFT_WriteCommandData(0x46,PY2);
 		TFT_WriteCommandData(0x4e,PX1);
 		TFT_WriteCommandData(0x4f,PY1);
-		TFT_WriteCommand(0x22); 
+		TFT_WriteCommand(0x22);
 	}
 }
 
@@ -393,14 +393,14 @@ void TFT_Char(char c,unsigned int x,unsigned int y, char scale,unsigned int Fcol
 
    	unsigned char i,ch;
 	unsigned short j;
-	unsigned short temp; 
+	unsigned short temp;
 
 	CS_PORT &= ~CS;
 
 	temp = (c-32)*32; // 32 bytes per char
 
 	unsigned short col;
-	
+
 	for(j=0; j<32; j+=2) // 32 bytes in char, row stride size of 2 bytes
 	{
 		for (int b=0; b<scale; b++)
@@ -421,9 +421,9 @@ void TFT_Char(char c,unsigned int x,unsigned int y, char scale,unsigned int Fcol
 				// Don't reverse byte
 #elif defined NEW_LCD
 				ch = ReverseByte(ch);
-#endif	
+#endif
 				for(i=0; i<6; i++)
-				{   
+				{
 					char n = i;
 #ifdef ROTATE180
 					if (zz != 0) n += 2; // Original version
@@ -431,7 +431,7 @@ void TFT_Char(char c,unsigned int x,unsigned int y, char scale,unsigned int Fcol
 					if (zz == 0) n += 2;
 #else
 					if (zz != 0) n += 2;
-#endif		
+#endif
 					if((ch&(1<<n)) != 0)
 						col = Fcolor;
 					else
@@ -469,7 +469,7 @@ void TFT_CentredText(char* S, unsigned int x, unsigned int y, char scale, unsign
 void Touch_Init()
 {
 	T_DDR  |= T_CS + T_CLK + T_DIN;
-		
+
 
 	T_CS_PORT |= T_CS;
 	T_CLK_PORT |= T_CLK;
@@ -478,7 +478,7 @@ void Touch_Init()
 
 void Touch_Read()
 {
-	T_CS_PORT &= ~T_CS; //cbi(P_CS, B_CS);                    
+	T_CS_PORT &= ~T_CS; //cbi(P_CS, B_CS);
 
 	int tempx=0, tempy=0, x=0, y=0, samples=0;
 	for (int i=0; i<5; i++)
@@ -573,8 +573,8 @@ void Touch_WriteData(unsigned char data)
 			T_DIN_PORT |= T_DIN; //sbi(P_DIN, B_DIN);
 		else
 			T_DIN_PORT &= ~T_DIN; //cbi(P_DIN, B_DIN);
-		data = data<<1; 
-		T_CLK_PORT |= T_CLK; //cbi(P_CLK, B_CLK);                
+		data = data<<1;
+		T_CLK_PORT |= T_CLK; //cbi(P_CLK, B_CLK);
 		T_CLK_PORT &= ~T_CLK; //sbi(P_CLK, B_CLK);
 	}
 }
@@ -587,7 +587,7 @@ unsigned short Touch_ReadData()
 	{
 		data = data<<1;
 		T_CLK_PORT |= T_CLK; //sbi(P_CLK, B_CLK);
-		T_CLK_PORT &= ~T_CLK; //cbi(P_CLK, B_CLK);                
+		T_CLK_PORT &= ~T_CLK; //cbi(P_CLK, B_CLK);
 		if (T_DOUT_PIN & T_DOUT)//rbi(P_DOUT, B_DOUT)) // T_DOUT_PORT was PINE
 			data++;
 	}
@@ -595,7 +595,7 @@ unsigned short Touch_ReadData()
 	return data;
 }
 
-inline unsigned char ReverseByte(unsigned char x)
+static inline unsigned char ReverseByte(unsigned char x)
 {
     static const unsigned char reverso[] = {
         0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
