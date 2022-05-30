@@ -3,6 +3,7 @@
 This project is based on the now open source Zeva EVMS Monitor V3 from Ian Hooper. It has an MIT license as does the original source. Changes so far include:
 
 - Customizing main screen title to FZR250
+- New colour scheme to make labels clearer and simplify use of colours. Changing the colour defined for LABEL_COLOUR will update all screens.
 
 ----------
 
@@ -29,6 +30,7 @@ Once assembled and programmed, the EVMS Monitor should be ready to use. Please r
 
 LICENSE (MIT Open Source):
 
+Copyright (c) 2022 Andrew Lo
 Copyright (c) 2021 Ian Hooper, ZEVA
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
