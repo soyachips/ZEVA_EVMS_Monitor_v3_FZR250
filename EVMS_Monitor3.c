@@ -33,11 +33,11 @@
 #include "can_lib.h"
 
 // Colour theme - only partially implemented
-#define BGND_COLOUR		BLACK
-#define LABEL_COLOUR	BLUE // RED
+#define BGND_COLOUR		DARK_GRAY
+#define LABEL_COLOUR	LIGHT_BLUE // RED
 #define TEXT_COLOUR		WHITE // RED
-#define CHARGING_COLOUR	BLUE // RED
-#define RUNNING_COLOUR	GREEN // RED
+#define CHARGING_COLOUR	GREEN // RED
+#define RUNNING_COLOUR	L_GRAY // RED
 #define SOC_COLOUR		0		// or 0 to use green-to-red dynamic colouring
 
 #define BUZZER	(1<<PB7)
@@ -61,26 +61,27 @@ typedef struct
 {
 	int x, y, width;
 	U16 colour;
+	U16 tcolour;
 	char* text;
 	bool isTouched;
 } Button;
 
-Button enterSetupButton = { 160, 30, 220, BLUE, "Enter Setup", false };
-Button resetSocButton = { 160, 70, 220, GREEN, "Reset SoC", false };
-Button zeroCurrentButton = { 160, 110, 220, GREEN, "Zero Current", false };
-Button displayOffButton = { 160, 150, 220, GREEN, "Display Off", false };
-Button exitOptionsButton = { 160, 190, 220, ORANGE, "Exit Options", false };
+Button enterSetupButton = { 160, 30, 220, L_GRAY, TEXT_COLOUR, "Enter Setup", false };
+Button resetSocButton = { 160, 70, 220, D_GRAY, TEXT_COLOUR, "Reset SoC", false };
+Button zeroCurrentButton = { 160, 110, 220, D_GRAY, TEXT_COLOUR, "Zero Current", false };
+Button displayOffButton = { 160, 150, 220, D_GRAY, TEXT_COLOUR, "Display Off", false };
+Button exitOptionsButton = { 160, 190, 220, L_GRAY, TEXT_COLOUR, "Exit Options", false };
 
-Button nextBmsModuleButton = { 260, 200, 100, GREEN, "Next", false };
-Button prevBmsModuleButton = { 60, 200, 100, GREEN, "Prev", false };
+Button nextBmsModuleButton = { 260, 200, 100, L_GRAY, TEXT_COLOUR, "Next", false };
+Button prevBmsModuleButton = { 60, 200, 100, L_GRAY, TEXT_COLOUR, "Prev", false };
 
-Button changeSetupPageButtonLeft = { 40, 25, 80, BLUE, "<", false };
-Button changeSetupPageButtonRight = { 280, 25, 80, BLUE, ">", false };
-Button changeParameterButtonLeft = { 40, 90, 80, BLUE, "<", false };
-Button changeParameterButtonRight = { 280, 90, 80, BLUE, ">", false };
-Button changeValueButtonLeft = { 40, 155, 80, BLUE, "<", false };
-Button changeValueButtonRight = { 280, 155, 80, BLUE, ">", false };
-Button exitSetupButton = { 160, 207, 160, ORANGE, "Exit Setup", false };
+Button changeSetupPageButtonLeft = { 40, 25, 80, BLUE, TEXT_COLOUR, "<", false };
+Button changeSetupPageButtonRight = { 280, 25, 80, BLUE, TEXT_COLOUR, ">", false };
+Button changeParameterButtonLeft = { 40, 90, 80, BLUE, TEXT_COLOUR, "<", false };
+Button changeParameterButtonRight = { 280, 90, 80, BLUE, TEXT_COLOUR, ">", false };
+Button changeValueButtonLeft = { 40, 155, 80, BLUE, TEXT_COLOUR, "<", false };
+Button changeValueButtonRight = { 280, 155, 80, BLUE, TEXT_COLOUR, ">", false };
+Button exitSetupButton = { 160, 207, 160, L_GRAY, TEXT_COLOUR, "Exit Setup", false };
 
 Button* touchedButton = 0;
 
@@ -629,7 +630,7 @@ int main()
 
 		if (showStartupScreen)
 		{
-			if (haveReceivedEVMSData)
+			if (haveReceivedEVMSData && ticksSincePowerOn > 10)
 			{
 				displayNeedsFullRedraw = true;
 				showStartupScreen = false;
@@ -666,7 +667,7 @@ int main()
 			RenderChargerStatus();
 		else if (displayedPage == EVMS_CORE)
 		{
-			if (haveReceivedCurrentData || isBMS16)
+			if ((haveReceivedCurrentData && ticksSincePowerOn >= 10) || isBMS16)
 				RenderMainView();
 			else
 				RenderMainViewNoCurrentSensor();
@@ -1353,23 +1354,23 @@ void DrawTitlebar(char* text)
 	switch (coreStatus)
 	{
 		case PRECHARGING:	col = ORANGE; break;
-		case RUNNING:		col = RUNNING_COLOUR; break;
+		case RUNNING:		col = L_GRAY; break;
 		case CHARGING:		col = CHARGING_COLOUR; break;
 		case STOPPED:		col = RED; break;
-		case SETUP:			col = ORANGE; break;
+		case SETUP:			col = L_GRAY; break;
 	}
 	if (settings[STATIONARY_VERSION] && (error == BMS_HIGH_WARNING || error == BMS_LOW_WARNING))
 	{
 		col = RED;
 		if (displayedPage != BMS12_DETAILS && error == BMS_HIGH_WARNING)
-			text = "EVMS: Charge Disabled";
+			text = "EVMS : Charge Disabled";
 		else if (displayedPage != BMS12_DETAILS && error == BMS_LOW_WARNING)
-			text = "EVMS: Discharge disabled";
+			text = "EVMS : Discharge Disabled";
 	}
 
 	TFT_Fill(BGND_COLOUR);
 	TFT_Box(0, 0, 319, 19, col);
-	TFT_CentredText(text, 160, 2, 1, BLACK, col);
+	TFT_CentredText(text, 160, 2, 1, TEXT_COLOUR, col);
 }
 
 void RenderStartupScreen()
@@ -1377,15 +1378,13 @@ void RenderStartupScreen()
 	if (displayNeedsFullRedraw) TFT_Fill(BGND_COLOUR);
 	displayNeedsFullRedraw = false;
 
-	TFT_CentredText("ZEVA EVMS Monitor", 160, 90, 1, TEXT_COLOUR, BGND_COLOUR);
-	TFT_CentredText("Waiting for data..", 160, 130, 1, BLUE, BGND_COLOUR);
-	
-	// Draw crosshairs at touch location
-	if (touchX > 20 && touchY > 20 && touchX < 300 && touchY < 300)
-	{
-		TFT_Box(touchX-20, touchY, touchX+20, touchY, D_GRAY);
-		TFT_Box(touchX, touchY-20, touchX, touchY+20, D_GRAY);
-	}
+	TFT_Box(0, 60, 57, 120, D_GRAY); // left
+	TFT_Box(0, 60, 319, 65, D_GRAY); // top
+	TFT_Box(273, 60, 319, 120, D_GRAY); // right
+	TFT_Box(0, 114, 319, 120, D_GRAY); // bottom
+	//for (int x=0; x<320; x+=2) TFT_Box(x, 60, x, 120, D_GRAY);
+	TFT_CentredText("FZR250", 160, 66, 3, LABEL_COLOUR, D_GRAY);
+	TFT_CentredText("ZEVA EVMS v3", 160, 145, 1, L_GRAY, BGND_COLOUR);
 }
 
 void RenderMainView()
@@ -1401,9 +1400,9 @@ void RenderMainView()
 		char statusText[20];
 		strcpy_P(statusText, (char*)pgm_read_word(&(coreStatuses[coreStatus])));
 		if (isBMS16)
-			strcpy(buffer, "BMS Status: ");
+			strcpy(buffer, "BMS Status : ");
 		else
-			strcpy(buffer, "FZR250: ");
+			strcpy(buffer, "FZR250 : ");
 		strcat(buffer, statusText);
 		
 		DrawTitlebar(buffer);
@@ -1418,7 +1417,7 @@ void RenderMainView()
 			/*if (evmsStatusBytes[7] > 0)*/ TFT_Text("Temp", 16, 202, 1, LABEL_COLOUR, BGND_COLOUR);
 		}
 		else
-			TFT_Text("Aux V", 16, 202, 1, LABEL_COLOUR, BGND_COLOUR);
+			TFT_Text("Aux", 16, 202, 1, LABEL_COLOUR, BGND_COLOUR);
 		if (temperature > 0 && !isBMS16) TFT_Text("Temp", 100, 202, 1, LABEL_COLOUR, BGND_COLOUR);
 		if (isolation <= 100 && !isBMS16) TFT_Text("Isol", 172, 202, 1, LABEL_COLOUR, BGND_COLOUR);
 		TFT_Text("SoC", 244, 202, 1, LABEL_COLOUR, BGND_COLOUR);		
@@ -1535,12 +1534,12 @@ void RenderMainView()
 	}
 	TFT_Text(buffer, 244, 220, 1, TEXT_COLOUR, BGND_COLOUR);
 
+	// Draw SoC as large battery icon
 	int height = 142 * soc / 100;
-	unsigned int redAmount = Cap(0b11111 /* 5 bits */ * (100-soc) / 100 *3/2, 0, 0b11111);
-	unsigned int greenAmount = Cap(0b111111 /* 6 bits */ * 2* soc / 100, 0, 0b111111);
-	unsigned int colour = (redAmount<<11) + (greenAmount<<5);
+	unsigned int colour = LIGHT_BLUE;
+	if (soc < 40) colour = ORANGE;
+	else if (soc < 20) colour = RED;
 
-	if (SOC_COLOUR > 0) colour = SOC_COLOUR;
 	TFT_Box(224, 48, 298, 190-height, D_GRAY);	// Background part
 	TFT_Box(224, 190-height, 298, 190, colour);	// SoC part
 }
@@ -1590,9 +1589,9 @@ void DrawCellsBarGraph()
 		{
 			int v = cellVoltages[m][c]/10;
 
-			U16 col = GREEN;
+			U16 col = LIGHT_BLUE;
 			if (v < min)
-			{	col = BLUE;
+			{	col = RED;
 				v = min;
 			}
 			else if (v > max)
@@ -1640,9 +1639,9 @@ void RenderMainViewNoCurrentSensor()
 		char statusText[20];
 		strcpy_P(statusText, (char*)pgm_read_word(&(coreStatuses[coreStatus])));
 		if (isBMS16)
-			strcpy(buffer, "BMS: ");
+			strcpy(buffer, "BMS : ");
 		else
-			strcpy(buffer, "EVMS: ");
+			strcpy(buffer, "EVMS : ");
 		strcat(buffer, statusText);
 		
 		DrawTitlebar(buffer);
@@ -1982,7 +1981,7 @@ void RenderBMSSummary()
 
 		char stringy[4];
 		itoa(numCells, stringy, 10);
-		strcpy(buffer, "BMS Summary: ");
+		strcpy(buffer, "BMS Summary : ");
 		strcat(buffer, stringy);
 		strcat(buffer, " cells");
 
@@ -2094,14 +2093,14 @@ void RenderBMSDetails()
 		{
 			char stringy[4];
 			itoa(numCells, stringy, 10);
-			strcpy(buffer, "BMS Details: ");
+			strcpy(buffer, "BMS Details : ");
 			strcat(buffer, stringy);
 			strcat(buffer, " cells");
 			DrawTitlebar(buffer);
 		}
 		else
 		{
-			DrawTitlebar("BMS Details: Module  ");
+			DrawTitlebar("BMS Details : Module  ");
 			TFT_Text("Temp1:", 12, 165, 1, LABEL_COLOUR, BGND_COLOUR);
 			TFT_Text("Temp2:", 162, 165, 1, LABEL_COLOUR, BGND_COLOUR);
 		}
@@ -2119,7 +2118,7 @@ void RenderBMSDetails()
 		if (coreStatus == IDLE) col = L_GRAY;
 		if (coreStatus == STOPPED) col = RED;
 		if (settings[STATIONARY_VERSION] && (error == BMS_HIGH_WARNING || error == BMS_LOW_WARNING)) col = RED;
-		TFT_Text(buffer, 274, 2, 1, BLACK, col);
+		TFT_Text(buffer, 274, 2, 1, TEXT_COLOUR, col);
 	}
 
 	// Matrix of voltages
@@ -2195,7 +2194,7 @@ void RenderWarningOverlay()
 		strcpy_P(buffer, (char*)pgm_read_word(&(errorStrings[error])));
 	
 		TFT_CentredText("Warning:", 160, 90, 1, RED, BLACK);
-		TFT_CentredText(buffer, 160, 130, 1, WHITE, BLACK);
+		TFT_CentredText(buffer, 160, 130, 1, TEXT_COLOUR, BLACK);
 	}
 }
 
@@ -2212,9 +2211,15 @@ void RenderOptionsButtons()
 	}
 
 	if ((coreStatus == IDLE || isBMS16) && (!CONFIG_LOCK || !CONFIG_LOCK2))
-		enterSetupButton.colour = BLUE;
+	{
+		enterSetupButton.colour = L_GRAY;
+		enterSetupButton.tcolour = TEXT_COLOUR;
+	}
 	else
+	{
 		enterSetupButton.colour = D_GRAY;
+		enterSetupButton.tcolour = D_GRAY;
+	}
 
 	RenderButton(&enterSetupButton, needsRedraw);
 	RenderButton(&resetSocButton, needsRedraw);
@@ -2239,7 +2244,7 @@ void RenderButton(Button* button, bool needsRedraw)
 		U16 Bcolor = BLACK;
 		if (touchX > 0 && touchY > 0 && touched) Bcolor = button->colour;
 		RenderBorderBox(button->x-button->width/2, button->y, button->x+button->width/2, button->y+32, button->colour, Bcolor);
-		TFT_CentredText(button->text, button->x, button->y+8, 1, WHITE, Bcolor);
+		TFT_CentredText(button->text, button->x, button->y+8, 1, button->tcolour, Bcolor);
 		button->isTouched = touched;
 	}
 }
@@ -2255,7 +2260,7 @@ void RenderSettings()
 		if (isBMS16)
 			DrawTitlebar("BMS Setup");
 		else
-			DrawTitlebar("EVMS: Setup");
+			DrawTitlebar("EVMS : Setup");
 		
 		if (!isBMS16 || haveReceivedMCData) TFT_Text("<", 8, 30, 2, TEXT_COLOUR, BGND_COLOUR);
 		TFT_Text("<", 8, 90, 2, TEXT_COLOUR, BGND_COLOUR);
@@ -2269,7 +2274,7 @@ void RenderSettings()
 
 	if (settingsPage == PACK_SETUP)
 	{
-		TFT_CentredText("BMS Configuration", 160, 40, 1, GREEN, BGND_COLOUR);
+		TFT_CentredText("BMS Configuration", 160, 40, 1, LABEL_COLOUR, BGND_COLOUR);
 		TFT_CentredText("Module ID:", 160, 90, 1, LABEL_COLOUR, BGND_COLOUR);
 		TFT_CentredText("Cell count:", 160, 150, 1, LABEL_COLOUR, BGND_COLOUR);
 
@@ -2316,7 +2321,7 @@ void RenderSettings()
 	}
 	else
 	{
-		TFT_CentredText(" General Settings ", 160, 40, 1, GREEN, BGND_COLOUR);
+		TFT_CentredText(" General Settings ", 160, 40, 1, LABEL_COLOUR, BGND_COLOUR);
 		TFT_CentredText("Parameter:", 160, 90, 1, LABEL_COLOUR, BGND_COLOUR);
 		TFT_CentredText("   Value:   ", 160, 150, 1, LABEL_COLOUR, BGND_COLOUR);
 

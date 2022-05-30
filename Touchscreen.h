@@ -73,12 +73,12 @@ enum { SSD1289, ILI9325, ILI9341 };
 	#define T_IRQ_PIN	PINE
 #endif
 
-// Colour format is RRRRR GGGGGG BBBBB
+// Colour format is RRRRR GGGGGG BBBBB (R = r/255*31 shift left by 11, G = g/255*63 shift left by 5, B = b/255*31, then add all together!)
 #define BLACK 0
 #define RED 63488
 #define GREEN 2016
 #define BLUE 31
-#define WHITE 65535
+#define WHITE 65535 // 255,255,255 = 63488 + 2016 + 31
 #define PURPLE 61727
 #define YELLOW 65504
 #define ORANGE	0b1111110000000000 // R31 G16 B0
@@ -86,6 +86,9 @@ enum { SSD1289, ILI9325, ILI9341 };
 #define D_GRAY 21130
 #define L_GRAY 31727
 
+// New colours
+#define DARK_GRAY 12678 // 50,50,50 = 12288 + 384 + 6
+#define LIGHT_BLUE 25917 // 99,167,236 = 24576 + 1312 + 29
 
 unsigned short TP_X, TP_Y; // Variables holding raw touch data
 
